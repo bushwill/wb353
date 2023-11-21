@@ -2,12 +2,18 @@ import React, { useState } from 'react';
 
 import ContactSection from './Sections/ContactSection';
 import LogInPage from './LoginPage'
+import CreateAccountPage from './CreateAccountPage';
 
 const LandingPage = () => {
 
   const [isLogInPageVisible, setLogInPageVisibility] = useState(false);
   const toggleLogInPage = () => {
     setLogInPageVisibility(!isLogInPageVisible);
+  };
+
+  const [isCreateAccountPageVisible, setCreateAccountPageVisibility] = useState(false);
+  const toggleCreateAccountPage = () => {
+    setCreateAccountPageVisibility(!isCreateAccountPageVisible);
   };
 
   const [isContactSectionVisible, setContactSectionVisibility] = useState(true);
@@ -30,17 +36,20 @@ const LandingPage = () => {
           <button onClick={toggleLogInPage} className="bg-green-500 hover:bg-green-700 text-white px-6 py-3 m-5 rounded-full shadow-lg">
             Log In
           </button>
-          <button onClick={toggleLogInPage} className="bg-green-500 hover:bg-green-700 text-white px-6 py-3 m-5 rounded-full shadow-lg">
+          <button onClick={toggleCreateAccountPage} className="bg-green-500 hover:bg-green-700 text-white px-6 py-3 m-5 rounded-full shadow-lg">
             Create Account
           </button>
         </div>
       </section>
 
       {/* Contact Section */}
-      {isContactSectionVisible && < ContactSection />}
+      {isContactSectionVisible && < ContactSection onCancel={toggleContactSection}/>}
 
       {/* LogInPage Modal */}
-      {isLogInPageVisible && < LogInPage />}
+      {isLogInPageVisible && < LogInPage onCancel={toggleLogInPage}/>}
+
+      {/* CreateAccountPage Modal */}
+      {isCreateAccountPageVisible && < CreateAccountPage onCancel={toggleCreateAccountPage}/>}
 
     </div>
   );

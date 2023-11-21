@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Posting Page</title>
+</head>
+
+<body>
+    <h1>Post a Message</h1>
+    <form id="postForm">
+        <label for="topic">Topic:</label>
+        <input type="text" id="topic"><br>
+        <label for="data">Data:</label>
+        <input type="text" id="data"><br>
+        <button type="button" onclick="submitMessage()">Submit Message</button>
+        <button type="button" onclick="retrieveMessages()">Retrieve Message</button>
+        <button type="button" onclick="initialize()">Initialize Database</button>
+    </form>
+
+    <h2>All Posts</h2>
+    <pre id="postList"></pre>
+
+    <script>
+        function submitMessage() {
+            const topic = document.getElementById('topic').value;
+            const data = document.getElementById('data').value;
+
+            fetch('/addPost', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ topic, data }),
+            })
+                .then(function (response) {
+                    return response.text();
+                })
+                .then(function (text) {
+                    console.log(text);
+                })
+                .catch(function (error) {
+                    console.error('There was a problem with the fetch operation:', error);
+                });
+            document.getElementById("topic").value = '';
+            document.getElementById("data").value = '';
+            retrieveMessages();
+        }
+
+        function retrieveMessages() {
+            fetch('/getPosts', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    const postList = document.getElementById('postList');
+                    postList.textContent = '';
+
+                    data.forEach((entry) => {
+                        const post = document.createElement('p');
+                        post.textContent = `Topic: ${entry.topic}, Data: ${entry.data}`;
+                        postList.appendChild(post);
+                    });
+                })
+                .catch((error) => {
+                    console.error('Fetch error:', error);
+                });
+        }
+
+        function initialize() {
+            window.location.href = "/init";
+        }
+    </script>
+
+</body>
+
+</html>

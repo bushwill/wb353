@@ -1,0 +1,30 @@
+version: "3"
+services:
+
+  app:
+    build:
+      context: ./a4
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - server
+
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5050:5050"
+    depends_on:
+      - mysql1
+
+  mysql1:
+    image: mysql:5.7
+    platform: linux/x86_64
+    environment:
+      MYSQL_DATABASE: postdb
+      MYSQL_ROOT_PASSWORD: admin
+    ports:
+      - "3306:3306"
+

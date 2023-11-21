@@ -4,7 +4,14 @@ module.exports = {
     "./src/**/*.{js,jsx,ts,tsx}",
   ],  
   theme: {
-    extend: {},
+    extend: {
+      minWidth: {
+        'popup': '80%'
+      },
+      minHeight: {
+        'popup': '80%'
+      }
+    },
   },
   plugins: [],
 }

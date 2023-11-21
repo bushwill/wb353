@@ -41,8 +41,16 @@ app.get('/init', (req, res) => {
                         res.status(500).send('Error creating the table');
                     } else {
                         console.log('Table "users" created');
-                        res.status(200).send('Database and table initialization successful');
-                        dbinit = true;
+                        connection.query(`INSERT INTO users (username, password) VALUES ('bushwill', 'guest')`,
+                            (error, result) => {
+                                if (error) {
+                                    console.error('Error creating admin user:', error);
+                                    res.status(500).send('Error creating admin user.');
+                                } else {
+                                    res.status(200).send('Database and table initialization successful');
+                                    dbinit = true;
+                                }
+                            });
                     }
                 });
             }

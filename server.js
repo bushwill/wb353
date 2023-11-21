@@ -1,3 +1,7 @@
+/*
+    TODO -> When inserting a username that's already taken, should return an error and prevent insertion
+*/
+
 const express = require('express');
 const mysql = require('mysql');
 const app = express();
@@ -10,33 +14,33 @@ app.use(express.json());
 app.use(cors());
 
 var connection = mysql.createConnection({
-    host: 'mysql1',
+    host: 'mysql',
     user: 'root',
     password: 'admin',
-    database: 'postdb'
+    database: 'wb370database'
 });
 
 app.get('/init', (req, res) => {
     if (!dbinit) {
         connection.connect();
-        connection.query('CREATE DATABASE IF NOT EXISTS postdb', (createDbErr) => {
+        connection.query('CREATE DATABASE IF NOT EXISTS wb370database', (createDbErr) => {
             if (createDbErr) {
                 console.error('Error creating the database:', createDbErr);
                 res.status(500).send('Error creating the database');
             } else {
-                console.log('Database "postdb" created');
+                console.log('Database "wb370database" created');
 
-                connection.query(`CREATE TABLE IF NOT EXISTS posts
+                connection.query(`CREATE TABLE IF NOT EXISTS users
           ( id int unsigned NOT NULL auto_increment, 
-            topic varchar(50) NOT NULL,
-            data varchar(100),
+            username varchar(100) NOT NULL,
+            password varchar(100) NOT NULL,
             PRIMARY KEY (id)
           )`, (error, result) => {
                     if (error) {
                         console.error('Error creating the table:', error);
                         res.status(500).send('Error creating the table');
                     } else {
-                        console.log('Table "posts" created');
+                        console.log('Table "users" created');
                         res.status(200).send('Database and table initialization successful');
                         dbinit = true;
                     }
@@ -50,28 +54,23 @@ app.get('/init', (req, res) => {
 });
 
 
-app.post('/addPost', (req, res) => {
-    const { topic, data } = req.body;
-
-    const timestamp = new Date().toLocaleString();
-
-    const query = `INSERT INTO posts (topic, data) VALUES ('${topic}', '${data}')`;
-
-    connection.query(query, function (error, result) {
+app.post('/createUser', (req, res) => {
+    const { username, password } = req.body;
+    const insertQuery = `INSERT INTO users (username, password) VALUES ('${username}', '${password}')`;
+    connection.query(insertQuery, function (error, result) {
         if (error) {
-            console.error("Error inserting into table:", error);
-            res.status(500).json({ success: false, message: "Error inserting into table." });
+            console.error("Error inserting user into table:", error);
+            res.status(500).json({ success: false, message: "Error creating user." });
         } else {
-            console.log("Successfully inserted into table!");
-            res.status(200).json({ success: true, message: "Successfully inserted into table!" });
+            console.log("Successfully inserted user into table!");
+            res.status(200).json({ success: true, message: "Successfully created user!" });
         }
     });
 });
 
 
-app.get('/getPosts', (req, res) => {
-    const query = 'SELECT * FROM posts';
-
+app.get('/getUsers', (req, res) => {
+    const query = 'SELECT * FROM users';
     connection.query(query, (error, results) => {
         if (error) {
             res.status(500).json({ error: 'Error fetching posts' });
@@ -87,5 +86,5 @@ app.listen(port, () => {
 });
 
 app.get('/', (req, res) => {
-    res.sendFile('posting.html', { root: __dirname });
+    res.sendFile('server.html', { root: __dirname });
 });

@@ -3,35 +3,35 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Posting Page</title>
+    <title>Server Page</title>
 </head>
 
 <body>
-    <h1>Post a Message</h1>
+    <h1>Create a User</h1>
     <form id="postForm">
-        <label for="topic">Topic:</label>
-        <input type="text" id="topic"><br>
-        <label for="data">Data:</label>
-        <input type="text" id="data"><br>
-        <button type="button" onclick="submitMessage()">Submit Message</button>
-        <button type="button" onclick="retrieveMessages()">Retrieve Message</button>
+        <label for="username">Username:</label>
+        <input type="text" id="username"><br>
+        <label for="password">Password:</label>
+        <input type="text" id="password"><br>
+        <button type="button" onclick="createUser()">Create User</button>
+        <button type="button" onclick="retrieveUsers()">Retrieve Users</button>
         <button type="button" onclick="initialize()">Initialize Database</button>
     </form>
 
-    <h2>All Posts</h2>
-    <pre id="postList"></pre>
+    <h2>All Users</h2>
+    <pre id="userList"></pre>
 
     <script>
-        function submitMessage() {
-            const topic = document.getElementById('topic').value;
-            const data = document.getElementById('data').value;
+        function createUser() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
 
-            fetch('/addPost', {
+            fetch('/createUser', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ topic, data }),
+                body: JSON.stringify({ username, password }),
             })
                 .then(function (response) {
                     return response.text();
@@ -42,13 +42,13 @@
                 .catch(function (error) {
                     console.error('There was a problem with the fetch operation:', error);
                 });
-            document.getElementById("topic").value = '';
-            document.getElementById("data").value = '';
-            retrieveMessages();
+            document.getElementById("username").value = '';
+            document.getElementById("password").value = '';
+            retrieveUsers();
         }
 
-        function retrieveMessages() {
-            fetch('/getPosts', {
+        function retrieveUsers() {
+            fetch('/getUsers', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -56,13 +56,13 @@
             })
                 .then((response) => response.json())
                 .then((data) => {
-                    const postList = document.getElementById('postList');
-                    postList.textContent = '';
+                    const userList = document.getElementById('userList');
+                    userList.textContent = '';
 
                     data.forEach((entry) => {
                         const post = document.createElement('p');
-                        post.textContent = `Topic: ${entry.topic}, Data: ${entry.data}`;
-                        postList.appendChild(post);
+                        post.textContent = ` id: ${entry.id}, username: ${entry.username}, password: ${entry.password}`;
+                        userList.appendChild(post);
                     });
                 })
                 .catch((error) => {

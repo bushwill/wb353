@@ -67,10 +67,27 @@ app.get('/init', (req, res) => {
                         console.log('Table "channels" created');
                     }
                 });
+            connection.query(`CREATE TABLE IF NOT EXISTS replies
+                                ( id int unsigned NOT NULL auto_increment, 
+                                reply varchar(1000) NOT NULL,
+                                user_id int unsigned NOT NULL,
+                                post_id int unsigned NOT NULL,
+                                likes int unsigned NOT NULL,
+                                dislikes int unsigned NOT NULL,
+                                PRIMARY KEY (id)
+                                )`,
+                (error, result) => {
+                    if (error) {
+                        console.error('Error creating the replies table:', error);
+                        res.status(500).send('Error creating the replies table');
+                    } else {
+                        console.log('Table "replies" created');
+                    }
+                });
             connection.query(`CREATE TABLE IF NOT EXISTS posts
                                 ( id int unsigned NOT NULL auto_increment, 
                                 question varchar(255) NOT NULL,
-                                description varchar(500),
+                                description varchar(1000),
                                 user_id int unsigned NOT NULL,
                                 channel_id int unsigned,
                                 likes int unsigned NOT NULL,
@@ -139,6 +156,32 @@ app.post('/createPost', (req, res) => {
 
 app.get('/getPosts', (req, res) => {
     const query = 'SELECT * FROM posts';
+    connection.query(query, (error, results) => {
+        if (error) {
+            res.status(500).json({ error: 'Error fetching posts' });
+        } else {
+            res.status(200).json(results);
+        }
+    });
+});
+
+app.post('/createReply', (req, res) => {
+    const { reply, user_id, post_id } = req.body;
+    const insertQuery = `INSERT INTO replies (reply, user_id, post_id, likes, dislikes) VALUES ('${reply}', '${user_id}', '${post_id}', '0', '0')`;
+    connection.query(insertQuery, function (error, result) {
+        if (error) {
+            console.error("Error inserting post into table:", error);
+            res.status(500).json({ success: false, message: "Error creating post." });
+        } else {
+            console.log("Successfully inserted post into table!");
+            res.status(200).json({ success: true, message: "Successfully created post!" });
+        }
+    });
+});
+
+
+app.get('/getReplies', (req, res) => {
+    const query = 'SELECT * FROM replies';
     connection.query(query, (error, results) => {
         if (error) {
             res.status(500).json({ error: 'Error fetching posts' });

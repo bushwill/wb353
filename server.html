@@ -38,6 +38,21 @@
     <h2>All Posts</h2>
     <pre id="postList"></pre>
 
+    <h1>Create a Reply</h1>
+    <form id="replyForm">
+        <label for="reply">Reply:</label>
+        <input type="text" id="reply"><br>
+        <label for="reply_user_id">User_ID:</label>
+        <input type="text" id="reply_user_id"><br>
+        <label for="reply_post_id">Post_ID:</label>
+        <input type="text" id="reply_post_id"><br>
+        <button type="button" onclick="createReply()">Create Reply</button>
+        <button type="button" onclick="retrieveReplies()">Retrieve Replies</button>
+    </form>
+
+    <h2>All Replies</h2>
+    <pre id="replyList"></pre>
+
     <h1>Create a Channel</h1>
     <form id="channelForm">
         <label for="name">Name:</label>
@@ -145,6 +160,56 @@
                         const post = document.createElement('p');
                         post.textContent = ` id: ${entry.id}, question: ${entry.question}, description: ${entry.description}, user_id: ${entry.user_id}, channel_id: ${entry.channel_id}, likes: ${entry.likes}, dislikes: ${entry.dislikes}`;
                         postList.appendChild(post);
+                    });
+                })
+                .catch((error) => {
+                    console.error('Fetch error:', error);
+                });
+        }
+
+        function createReply() {
+            const reply = document.getElementById('reply').value;
+            const user_id = document.getElementById('reply_user_id').value;
+            const post_id = document.getElementById('reply_post_id').value;
+
+            fetch('/createReply', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ reply, user_id, post_id }),
+            })
+                .then(function (response) {
+                    return response.text();
+                })
+                .then(function (text) {
+                    console.log(text);
+                })
+                .catch(function (error) {
+                    console.error('There was a problem with the fetch operation:', error);
+                });
+            document.getElementById("reply").value = '';
+            document.getElementById("reply_user_id").value = '';
+            document.getElementById("reply_post_id").value = '';
+            retrieveReplies();
+        }
+
+        function retrieveReplies() {
+            fetch('/getReplies', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    const replyList = document.getElementById('replyList');
+                    replyList.textContent = '';
+
+                    data.forEach((entry) => {
+                        const reply = document.createElement('p');
+                        reply.textContent = ` id: ${entry.id}, reply: ${entry.reply}, user_id: ${entry.user_id}, post_id: ${entry.post_id}, likes: ${entry.likes}, dislikes: ${entry.dislikes}`;
+                        replyList.appendChild(reply);
                     });
                 })
                 .catch((error) => {

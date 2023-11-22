@@ -53,6 +53,20 @@ app.get('/init', (req, res) => {
                             });
                     }
                 });
+            connection.query(`CREATE TABLE IF NOT EXISTS channels
+                                ( id int unsigned NOT NULL auto_increment, 
+                                name varchar(255) NOT NULL,
+                                user_id int unsigned NOT NULL,
+                                PRIMARY KEY (id)
+                                )`,
+                (error, result) => {
+                    if (error) {
+                        console.error('Error creating the channels table:', error);
+                        res.status(500).send('Error creating the channels table');
+                    } else {
+                        console.log('Table "channels" created');
+                    }
+                });
             connection.query(`CREATE TABLE IF NOT EXISTS posts
                                 ( id int unsigned NOT NULL auto_increment, 
                                 question varchar(255) NOT NULL,
@@ -128,6 +142,32 @@ app.get('/getPosts', (req, res) => {
     connection.query(query, (error, results) => {
         if (error) {
             res.status(500).json({ error: 'Error fetching posts' });
+        } else {
+            res.status(200).json(results);
+        }
+    });
+});
+
+app.post('/createChannel', (req, res) => {
+    const { name, user_id } = req.body;
+    const insertQuery = `INSERT INTO channels (name, user_id ) VALUES ('${name}', '${user_id}')`;
+    connection.query(insertQuery, function (error, result) {
+        if (error) {
+            console.error("Error inserting channel into table:", error);
+            res.status(500).json({ success: false, message: "Error creating channel." });
+        } else {
+            console.log("Successfully inserted channel into table!");
+            res.status(200).json({ success: true, message: "Successfully created channel!" });
+        }
+    });
+});
+
+
+app.get('/getChannels', (req, res) => {
+    const query = 'SELECT * FROM channels';
+    connection.query(query, (error, results) => {
+        if (error) {
+            res.status(500).json({ error: 'Error fetching channels' });
         } else {
             res.status(200).json(results);
         }

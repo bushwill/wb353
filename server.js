@@ -1,5 +1,4 @@
 /*
-    TODO -> When inserting a username that's already taken, should return an error and prevent insertion
     TODO -> Channel_id in posts table should be NOT NULL when channels are working
 */
 
@@ -115,18 +114,59 @@ app.get('/init', (req, res) => {
 
 app.post('/createUser', (req, res) => {
     const { username, password } = req.body;
-    const insertQuery = `INSERT INTO users (username, password) VALUES ('${username}', '${password}')`;
-    connection.query(insertQuery, function (error, result) {
-        if (error) {
-            console.error("Error inserting user into table:", error);
-            res.status(500).json({ success: false, message: "Error creating user." });
+    checkIfUserExists(username, (userExists) => {
+        if (userExists) {
+            console.error(`User ${username} already exists!`);
+            res.status(500).json({ success: false, message: "Error creating user, user already exists." });
         } else {
-            console.log("Successfully inserted user into table!");
-            res.status(200).json({ success: true, message: "Successfully created user!" });
+            const insertQuery = `INSERT INTO users (username, password) VALUES ('${username}', '${password}')`;
+            connection.query(insertQuery, function (error, result) {
+                if (error) {
+                    console.error("Error inserting user into table:", error);
+                    res.status(500).json({ success: false, message: "Error creating user." });
+                } else {
+                    console.log("Successfully inserted user into table!");
+                    res.status(200).json({ success: true, message: "Successfully created user!" });
+                }
+            });
         }
     });
 });
 
+function checkIfUserExists(username, callback) {
+    const query = 'SELECT * FROM users WHERE username = ?';
+
+    connection.query(query, [username], (error, results) => {
+        if (error) {
+            console.error('Error fetching user:', error);
+            callback(false);
+        } else {
+            const userFound = results.length > 0;
+            callback(userFound);
+        }
+    });
+}
+
+app.post('/getUser', (req, res) => {
+    const { username } = req.body;
+    const query = 'SELECT * FROM users WHERE username = ?';
+
+    connection.query(query, [username], (error, results) => {
+        if (error) {
+            res.status(500).json({ error: 'Error fetching user' });
+        } else {
+            res.status(200).json(results);
+        }
+    });
+});
+
+app.post('/checkUser', (req, res) => {
+    const { username } = req.body;
+
+    checkIfUserExists(username, (userExists) => {
+        res.status(200).json({ userExists });
+    });
+});
 
 app.get('/getUsers', (req, res) => {
     const query = 'SELECT * FROM users';

@@ -16,6 +16,7 @@
         <input type="text" id="password"><br>
         <button type="button" onclick="createUser()">Create User</button>
         <button type="button" onclick="retrieveUsers()">Retrieve Users</button>
+        <button type="button" onclick="retrieveUser()">Retrieve User</button>
     </form>
 
     <h2>All Users</h2>
@@ -98,6 +99,32 @@
                 headers: {
                     'Content-Type': 'application/json',
                 },
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    const userList = document.getElementById('userList');
+                    userList.textContent = '';
+
+                    data.forEach((entry) => {
+                        const user = document.createElement('p');
+                        user.textContent = ` id: ${entry.id}, username: ${entry.username}, password: ${entry.password}`;
+                        userList.appendChild(user);
+                    });
+                })
+                .catch((error) => {
+                    console.error('Fetch error:', error);
+                });
+        }
+
+        function retrieveUser() {
+            const username = document.getElementById('username').value;
+
+            fetch('/getUser', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username }),
             })
                 .then((response) => response.json())
                 .then((data) => {

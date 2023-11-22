@@ -1,5 +1,6 @@
 /*
     TODO -> When inserting a username that's already taken, should return an error and prevent insertion
+    TODO -> Channel_id in posts table should be NOT NULL when channels are working
 */
 
 const express = require('express');
@@ -29,16 +30,18 @@ app.get('/init', (req, res) => {
                 res.status(500).send('Error creating the database');
             } else {
                 console.log('Database "wb370database" created');
+            }
 
-                connection.query(`CREATE TABLE IF NOT EXISTS users
-          ( id int unsigned NOT NULL auto_increment, 
-            username varchar(100) NOT NULL,
-            password varchar(100) NOT NULL,
-            PRIMARY KEY (id)
-          )`, (error, result) => {
+            connection.query(`CREATE TABLE IF NOT EXISTS users
+                                ( id int unsigned NOT NULL auto_increment, 
+                                username varchar(100) NOT NULL,
+                                password varchar(100) NOT NULL,
+                                PRIMARY KEY (id)
+                                )`,
+                (error, result) => {
                     if (error) {
-                        console.error('Error creating the table:', error);
-                        res.status(500).send('Error creating the table');
+                        console.error('Error creating the users table:', error);
+                        res.status(500).send('Error creating the users table');
                     } else {
                         console.log('Table "users" created');
                         connection.query(`INSERT INTO users (username, password) VALUES ('bushwill', 'guest')`,
@@ -46,17 +49,34 @@ app.get('/init', (req, res) => {
                                 if (error) {
                                     console.error('Error creating admin user:', error);
                                     res.status(500).send('Error creating admin user.');
-                                } else {
-                                    res.status(200).send('Database and table initialization successful');
-                                    dbinit = true;
                                 }
                             });
                     }
                 });
-            }
+            connection.query(`CREATE TABLE IF NOT EXISTS posts
+                                ( id int unsigned NOT NULL auto_increment, 
+                                question varchar(255) NOT NULL,
+                                description varchar(500),
+                                user_id int unsigned NOT NULL,
+                                channel_id int unsigned,
+                                likes int unsigned NOT NULL,
+                                dislikes int unsigned NOT NULL,
+                                PRIMARY KEY (id)
+                                )`,
+                (error, result) => {
+                    if (error) {
+                        console.error('Error creating the posts table:', error);
+                        res.status(500).send('Error creating the posts table');
+                    } else {
+                        console.log('Table "posts" created');
+                        dbinit = true;
+                        console.log('Database and table initialization successful');
+                        res.status(200).send('Database and table initialization successful');
+                    }
+                });
         });
     } else {
-        console.log("Database already initialized!");
+        console.log("Database is already initialized!");
         res.status(200).send('Database is already initialized!');
     }
 });
@@ -79,6 +99,32 @@ app.post('/createUser', (req, res) => {
 
 app.get('/getUsers', (req, res) => {
     const query = 'SELECT * FROM users';
+    connection.query(query, (error, results) => {
+        if (error) {
+            res.status(500).json({ error: 'Error fetching users' });
+        } else {
+            res.status(200).json(results);
+        }
+    });
+});
+
+app.post('/createPost', (req, res) => {
+    const { question, description, user_id, channel_id } = req.body;
+    const insertQuery = `INSERT INTO posts (question, description, user_id, channel_id, likes, dislikes) VALUES ('${question}', '${description}', '${user_id}', '${channel_id}', '0', '0')`;
+    connection.query(insertQuery, function (error, result) {
+        if (error) {
+            console.error("Error inserting post into table:", error);
+            res.status(500).json({ success: false, message: "Error creating post." });
+        } else {
+            console.log("Successfully inserted post into table!");
+            res.status(200).json({ success: true, message: "Successfully created post!" });
+        }
+    });
+});
+
+
+app.get('/getPosts', (req, res) => {
+    const query = 'SELECT * FROM posts';
     connection.query(query, (error, results) => {
         if (error) {
             res.status(500).json({ error: 'Error fetching posts' });

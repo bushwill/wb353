@@ -4,22 +4,39 @@
 <head>
     <meta charset="UTF-8">
     <title>Server Page</title>
+    <button type="button" onclick="initialize()">Initialize Database</button>
 </head>
 
 <body>
     <h1>Create a User</h1>
-    <form id="postForm">
+    <form id="userForm">
         <label for="username">Username:</label>
         <input type="text" id="username"><br>
         <label for="password">Password:</label>
         <input type="text" id="password"><br>
         <button type="button" onclick="createUser()">Create User</button>
         <button type="button" onclick="retrieveUsers()">Retrieve Users</button>
-        <button type="button" onclick="initialize()">Initialize Database</button>
     </form>
 
     <h2>All Users</h2>
     <pre id="userList"></pre>
+
+    <h1>Create a Post</h1>
+    <form id="postForm">
+        <label for="question">Question:</label>
+        <input type="text" id="question"><br>
+        <label for="description">Description:</label>
+        <input type="text" id="description"><br>
+        <label for="user_id">User_ID:</label>
+        <input type="text" id="user_id"><br>
+        <label for="channel_id">Channel_ID:</label>
+        <input type="text" id="channel_id"><br>
+        <button type="button" onclick="createPost()">Create Post</button>
+        <button type="button" onclick="retrievePosts()">Retrieve Posts</button>
+    </form>
+
+    <h2>All Posts</h2>
+    <pre id="postList"></pre>
 
     <script>
         function createUser() {
@@ -60,9 +77,63 @@
                     userList.textContent = '';
 
                     data.forEach((entry) => {
+                        const user = document.createElement('p');
+                        user.textContent = ` id: ${entry.id}, username: ${entry.username}, password: ${entry.password}`;
+                        userList.appendChild(user);
+                    });
+                })
+                .catch((error) => {
+                    console.error('Fetch error:', error);
+                });
+        }
+
+        function createPost() {
+            const question = document.getElementById('question').value;
+            const description = document.getElementById('description').value;
+            const user_id = document.getElementById('user_id').value;
+            const channel_id = document.getElementById('channel_id').value;
+
+
+
+            fetch('/createPost', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ question, description, user_id, channel_id }),
+            })
+                .then(function (response) {
+                    return response.text();
+                })
+                .then(function (text) {
+                    console.log(text);
+                })
+                .catch(function (error) {
+                    console.error('There was a problem with the fetch operation:', error);
+                });
+            document.getElementById("question").value = '';
+            document.getElementById("description").value = '';
+            document.getElementById("user_id").value = '';
+            document.getElementById("channel_id").value = '';
+            retrievePosts();
+        }
+
+        function retrievePosts() {
+            fetch('/getPosts', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    const postList = document.getElementById('postList');
+                    postList.textContent = '';
+
+                    data.forEach((entry) => {
                         const post = document.createElement('p');
-                        post.textContent = ` id: ${entry.id}, username: ${entry.username}, password: ${entry.password}`;
-                        userList.appendChild(post);
+                        post.textContent = ` id: ${entry.id}, question: ${entry.question}, description: ${entry.description}, user_id: ${entry.user_id}, channel_id: ${entry.channel_id}, likes: ${entry.likes}, dislikes: ${entry.dislikes}`;
+                        postList.appendChild(post);
                     });
                 })
                 .catch((error) => {

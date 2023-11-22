@@ -159,7 +159,7 @@ app.post('/getUser', (req, res) => {
         if (error) {
             res.status(500).json({ error: 'Error fetching user' });
         } else {
-            res.status(200).json(results);
+            res.status(200).json(results[0]);
         }
     });
 });

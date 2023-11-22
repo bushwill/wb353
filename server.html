@@ -131,11 +131,9 @@
                     const userList = document.getElementById('userList');
                     userList.textContent = '';
 
-                    data.forEach((entry) => {
-                        const user = document.createElement('p');
-                        user.textContent = ` id: ${entry.id}, username: ${entry.username}, password: ${entry.password}`;
-                        userList.appendChild(user);
-                    });
+                    const user = document.createElement('p');
+                    user.textContent = ` id: ${data.id}, username: ${data.username}, password: ${data.password}`;
+                    userList.appendChild(user);
                 })
                 .catch((error) => {
                     console.error('Fetch error:', error);

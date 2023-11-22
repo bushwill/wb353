@@ -35,9 +35,9 @@ const CreateUserPage = ({ onCancel }) => {
                         console.error(`HTTP error! Status: ${response.status}, Message: ${data.message || 'Unknown error'}`);
                         setPopupTitle('Error!');
                         setPopupMessage(data.message);
+                        setPassword('');
                     });
                 } else {
-                    setUsername('');
                     setPassword('');
                     setPopupTitle("Success!");
                     setPopupMessage("Your user has been created successfully! Try logging in using the log in button");
@@ -58,14 +58,14 @@ const CreateUserPage = ({ onCancel }) => {
                     Cancel User Creation
                 </button>
                 <button onClick={redirectToApp} className="bg-pink-500 hover:bg-pink-400 text-white px-3 py-1 m-3 rounded-full shadow-lg">
-                    Admin Log In
+                    Admin Login
                 </button>
             </header>
             <h2 className="text-3xl font-bold mb-8">
                 Create User:
             </h2>
-            <p className='text-red-300'>{getPopupTitle}</p>
-            <p className='text-red-300'>{getPopupMessage}</p>
+            <p>{getPopupTitle}</p>
+            <p>{getPopupMessage}</p>
             <form>
                 <input
                     className="px-3 py-1 m-1 border-2 border-green-500"

@@ -13,12 +13,14 @@ app.use(express.static(__dirname));
 app.use(express.json());
 app.use(cors());
 
+
 var connection = mysql.createConnection({
     host: 'mysql',
     user: 'root',
     password: 'admin',
     database: 'wb370database'
 });
+
 
 app.get('/init', (req, res) => {
     if (!dbinit) {
@@ -133,6 +135,7 @@ app.post('/createUser', (req, res) => {
     });
 });
 
+
 function checkIfUserExists(username, callback) {
     const query = 'SELECT * FROM users WHERE username = ?';
 
@@ -147,6 +150,7 @@ function checkIfUserExists(username, callback) {
     });
 }
 
+
 app.post('/getUser', (req, res) => {
     const { username } = req.body;
     const query = 'SELECT * FROM users WHERE username = ?';
@@ -160,6 +164,7 @@ app.post('/getUser', (req, res) => {
     });
 });
 
+
 app.post('/checkUser', (req, res) => {
     const { username } = req.body;
 
@@ -167,6 +172,7 @@ app.post('/checkUser', (req, res) => {
         res.status(200).json({ userExists });
     });
 });
+
 
 app.get('/getUsers', (req, res) => {
     const query = 'SELECT * FROM users';
@@ -178,6 +184,7 @@ app.get('/getUsers', (req, res) => {
         }
     });
 });
+
 
 app.post('/createPost', (req, res) => {
     const { question, description, user_id, channel_id } = req.body;
@@ -205,6 +212,7 @@ app.get('/getPosts', (req, res) => {
     });
 });
 
+
 app.post('/createReply', (req, res) => {
     const { reply, user_id, post_id } = req.body;
     const insertQuery = `INSERT INTO replies (reply, user_id, post_id, likes, dislikes) VALUES ('${reply}', '${user_id}', '${post_id}', '0', '0')`;
@@ -230,6 +238,7 @@ app.get('/getReplies', (req, res) => {
         }
     });
 });
+
 
 app.post('/createChannel', (req, res) => {
     const { name, user_id } = req.body;
@@ -261,6 +270,7 @@ app.get('/getChannels', (req, res) => {
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
+
 
 app.get('/', (req, res) => {
     res.sendFile('server.html', { root: __dirname });

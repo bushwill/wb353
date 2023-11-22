@@ -19,6 +19,9 @@ const LogInPage = ({ onCancel }) => {
                 <button onClick={onCancel} className="bg-red-500 hover:bg-red-400 text-white px-3 py-1 m-3 rounded-full shadow-lg">
                     Cancel Log In
                 </button>
+                <button onClick={redirectToApp} className="bg-pink-500 hover:bg-pink-400 text-white px-3 py-1 m-3 rounded-full shadow-lg">
+                    Admin Log In
+                </button>
             </header>
             <h2 className="text-3xl font-bold mb-8">
                 Log In:

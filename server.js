@@ -1,5 +1,4 @@
 /*
-    TODO -> Channel_id in posts table should be NOT NULL when channels are working
     TODO -> Prevent duplicate channels
 */
 
@@ -91,7 +90,7 @@ app.get('/init', (req, res) => {
                                 question varchar(255) NOT NULL,
                                 description varchar(1000),
                                 user_id int unsigned NOT NULL,
-                                channel_id int unsigned,
+                                channel_id int unsigned NOT NULL,
                                 likes int unsigned NOT NULL,
                                 dislikes int unsigned NOT NULL,
                                 PRIMARY KEY (id)
@@ -209,6 +208,20 @@ app.get('/getPosts', (req, res) => {
             res.status(500).json({ error: 'Error fetching posts' });
         } else {
             res.status(200).json(results);
+        }
+    });
+});
+
+
+app.post('/getPost', (req, res) => {
+    const { post_id } = req.body;
+    const query = 'SELECT * FROM posts WHERE id = ?';
+
+    connection.query(query, [post_id], (error, results) => {
+        if (error) {
+            res.status(500).json({ error: 'Error fetching post' });
+        } else {
+            res.status(200).json(results[0]);
         }
     });
 });

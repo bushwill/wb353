@@ -1,20 +1,19 @@
 import React, { useState, useEffect } from 'react';
 
 import root from '../index';
+import PostPage from './PostPage'
 
 
 const Posts = ({ user_id, channel_id }) => {
     const [getPosts, setPosts] = useState([]);
 
 
-    const viewPost = () => {
-        /*
+    const viewPost = (user_id, post_id) => {
         root.render(
             <React.StrictMode>
-                <ChannelPage user_id={user_id} channel_id={channel_id} channel_name={channel_name} />
+                <PostPage user_id={user_id} post_id={post_id} />
             </React.StrictMode>
         );
-        */
     };
 
 
@@ -27,7 +26,7 @@ const Posts = ({ user_id, channel_id }) => {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        channel_id: channel_id,  // or just { channel_id } with ES6 shorthand
+                        channel_id: channel_id, 
                     }),
                 });
 
@@ -60,7 +59,7 @@ const Posts = ({ user_id, channel_id }) => {
                         <h1 className='text-3xl mb-8'>
                             {post.description}
                         </h1>
-                        <button className="bg-blue-500 hover:bg-blue-400 text-white px-3 py-1 m-3 rounded-full shadow-lg">
+                        <button onClick={() => viewPost(user_id, post.id)} className="bg-blue-500 hover:bg-blue-400 text-white px-3 py-1 m-3 rounded-full shadow-lg">
                             View Post
                         </button>
                     </div>

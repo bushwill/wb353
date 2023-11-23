@@ -213,6 +213,19 @@ app.get('/getPosts', (req, res) => {
 });
 
 
+app.post('/getChannelPosts', (req, res) => {
+    const { channel_id } = req.body;
+    const query = 'SELECT * FROM posts WHERE channel_id = ?';
+    connection.query(query, [channel_id], (error, results) => {
+        if (error) {
+            res.status(500).json({ error: `Error fetching posts for channel_id:${channel_id}` });
+        } else {
+            res.status(200).json(results);
+        }
+    });
+});
+
+
 app.post('/createReply', (req, res) => {
     const { reply, user_id, post_id } = req.body;
     const insertQuery = `INSERT INTO replies (reply, user_id, post_id, likes, dislikes) VALUES ('${reply}', '${user_id}', '${post_id}', '0', '0')`;

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import App from '../App/App'
+import ChannelList from '../Channels/ChannelList'
 import root from '../index'
 
 
@@ -11,7 +11,7 @@ const LoginPage = ({ onCancel }) => {
     const redirectToApp = (user_id, username) => {
         root.render(
             <React.StrictMode>
-                <App user_id={user_id} username={username} />
+                <ChannelList user_id={user_id} username={username} />
             </React.StrictMode>
         );
     };

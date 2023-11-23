@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 
-const Replies = ({ post_id }) => {
+const Replies = ({ onReply, post_id }) => {
     const [getReplies, setReplies] = useState([]);
 
 
@@ -42,6 +42,9 @@ const Replies = ({ post_id }) => {
                         <h1 className='text-3xl font-bold mb-8'>
                             {reply.reply}
                         </h1>
+                        <button onClick={() => onReply(0, reply.id)} className="bg-blue-500 hover:bg-blue-700 text-white px-6 py-3 m-5 rounded-full shadow-lg">
+                            Reply
+                        </button>
                     </div>
                 </div>
             ))}

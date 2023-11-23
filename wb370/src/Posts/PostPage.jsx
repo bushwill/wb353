@@ -69,7 +69,7 @@ const PostPage = ({ user_id, post_id }) => {
                         Replies:
                     </h2>
                     <section>
-                        {isRepliesVisible && < Replies post_id={post_id} />}
+                        {isRepliesVisible && < Replies onReply={toggleCreateReplyPageVisibility} post_id={post_id} />}
                         {!isRepliesVisible && < Replies post_id={post_id} />}
                     </section>
                     <footer className='fixed bottom-0 min-w-full'>

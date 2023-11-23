@@ -5,10 +5,13 @@ import root from '../index'
 
 
 const LoginPage = ({ onCancel }) => {
-    const redirectToApp = () => {
+    const adminLogin = () => {
+        redirectToApp(1, 'bushwill');
+    };
+    const redirectToApp = (user_id, username) => {
         root.render(
             <React.StrictMode>
-                <App />
+                <App user_id={user_id} username={username} />
             </React.StrictMode>
         );
     };
@@ -40,7 +43,7 @@ const LoginPage = ({ onCancel }) => {
                 } else {
                     return response.json().then(data => {
                         if (data.username === getUsername && data.password === getPassword) {
-                            redirectToApp();
+                            redirectToApp(data.user_id, data.username);
                         } else {
                             setPopupTitle('Error! No account found.');
                             setPopupMessage(`Wrong username and/or password.`);
@@ -61,9 +64,9 @@ const LoginPage = ({ onCancel }) => {
         <div className="bg-gray-100 rounded fixed top-10% min-w-popup min-h-popup text-center">
             <header className="bg-gray-200 text-left">
                 <button onClick={onCancel} className="bg-red-500 hover:bg-red-400 text-white px-3 py-1 m-3 rounded-full shadow-lg">
-                    Cancel User Login
+                    Close Window
                 </button>
-                <button onClick={redirectToApp} className="bg-pink-500 hover:bg-pink-400 text-white px-3 py-1 m-3 rounded-full shadow-lg">
+                <button type='button' onClick={adminLogin} className="bg-pink-500 hover:bg-pink-400 text-white px-3 py-1 m-3 rounded-full shadow-lg">
                     Admin Login
                 </button>
             </header>

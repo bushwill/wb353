@@ -4,7 +4,7 @@ import root from '../index';
 import ChannelPage from './ChannelPage';
 
 
-const Channels = (user_id) => {
+const Channels = ({ user_id }) => {
     const [getChannels, setChannels] = useState([]);
 
 

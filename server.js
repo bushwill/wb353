@@ -267,6 +267,19 @@ app.get('/getReplies', (req, res) => {
 });
 
 
+app.post('/getPostReplies', (req, res) => {
+    const { post_id } = req.body;
+    const query = 'SELECT * FROM replies WHERE post_id = ?';
+    connection.query(query, [post_id], (error, results) => {
+        if (error) {
+            res.status(500).json({ error: `Error fetching posts for post_id:${post_id}` });
+        } else {
+            res.status(200).json(results);
+        }
+    });
+});
+
+
 app.post('/createChannel', (req, res) => {
     const { name, user_id } = req.body;
     const insertQuery = `INSERT INTO channels (name, user_id ) VALUES ('${name}', '${user_id}')`;

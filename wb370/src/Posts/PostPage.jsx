@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
+import Replies from '../Replies/Replies'
+
 
 const PostPage = ({ user_id, post_id }) => {
 
@@ -51,7 +53,7 @@ const PostPage = ({ user_id, post_id }) => {
                         Replies:
                     </h2>
                     <section>
-                        Replies will be here.
+                        < Replies post_id={post_id}/>
                     </section>
                     <footer className='fixed bottom-0 min-w-full'>
                         <button className="bg-blue-500 hover:bg-blue-700 text-white px-6 py-3 m-5 rounded-full shadow-lg">

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import ContactSection from './Sections/ContactSection';
+import ContactSection from './ContactSection';
 import LogInPage from './LoginPage'
 import CreateUserPage from './CreateUserPage';
 

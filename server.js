@@ -1,5 +1,6 @@
 /*
     TODO -> Channel_id in posts table should be NOT NULL when channels are working
+    TODO -> Prevent duplicate channels
 */
 
 const express = require('express');

@@ -1,12 +1,28 @@
 import React, { useState, useEffect } from 'react';
 
 import Replies from '../Replies/Replies'
+import CreateReplyPage from '../Replies/CreateReplyPage'
 
 
 const PostPage = ({ user_id, post_id }) => {
 
+    const [getPost_ID, setPost_ID] = useState(post_id);
+    const [getReply_ID, setReply_ID] = useState(0);
     const [getPostQuestion, setPostQuestion] = useState("");
     const [getPostDescription, setPostDescription] = useState("");
+
+    const [isCreateReplyPageVisible, setCreateReplyPageVisibility] = useState(false);
+    const toggleCreateReplyPageVisibility = (post_id, reply_id) => {
+        setPost_ID(post_id);
+        setReply_ID(reply_id);
+        setCreateReplyPageVisibility(!isCreateReplyPageVisible);
+        refreshReplies();
+    };
+
+    const [isRepliesVisible, setRepliesVisibility] = useState(true);
+    const refreshReplies = () => {
+        setRepliesVisibility(!isRepliesVisible);
+    }
 
 
     useEffect(() => {
@@ -18,7 +34,7 @@ const PostPage = ({ user_id, post_id }) => {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        post_id: post_id,  
+                        post_id: post_id,
                     }),
                 });
 
@@ -53,18 +69,20 @@ const PostPage = ({ user_id, post_id }) => {
                         Replies:
                     </h2>
                     <section>
-                        < Replies post_id={post_id}/>
+                        {isRepliesVisible && < Replies post_id={post_id} />}
+                        {!isRepliesVisible && < Replies post_id={post_id} />}
                     </section>
                     <footer className='fixed bottom-0 min-w-full'>
-                        <button className="bg-blue-500 hover:bg-blue-700 text-white px-6 py-3 m-5 rounded-full shadow-lg">
-                            Create Reply
+                        <button onClick={() => toggleCreateReplyPageVisibility(post_id, 0)} className="bg-blue-500 hover:bg-blue-700 text-white px-6 py-3 m-5 rounded-full shadow-lg">
+                            Create Reply to Post
                         </button>
-                        <button className="bg-blue-500 hover:bg-blue-700 text-white px-6 py-3 m-5 rounded-full shadow-lg">
+                        <button onClick={refreshReplies} className="bg-blue-500 hover:bg-blue-700 text-white px-6 py-3 m-5 rounded-full shadow-lg">
                             Refresh Replies
                         </button>
                     </footer>
                 </div>
             </section>
+            {isCreateReplyPageVisible && < CreateReplyPage onCancel={toggleCreateReplyPageVisibility} user_id={user_id} post_id={getPost_ID} reply_id={getReply_ID}/>}
         </div>
     );
 };

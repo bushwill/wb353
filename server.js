@@ -273,7 +273,7 @@ app.post('/getPostReplies', (req, res) => {
     const query = 'SELECT * FROM replies WHERE post_id = ?';
     connection.query(query, [post_id], (error, results) => {
         if (error) {
-            res.status(500).json({ error: `Error fetching posts for post_id:${post_id}` });
+            res.status(500).json({ error: `Error fetching replies for post_id:${post_id}` });
         } else {
             res.status(200).json(results);
         }
@@ -285,7 +285,7 @@ app.post('/getReplyReplies', (req, res) => {
     const query = 'SELECT * FROM replies WHERE reply_id = ?';
     connection.query(query, [reply_id], (error, results) => {
         if (error) {
-            res.status(500).json({ error: `Error fetching posts for reply_id:${reply_id}` });
+            res.status(500).json({ error: `Error fetching replies for reply_id:${reply_id}` });
         } else {
             res.status(200).json(results);
         }

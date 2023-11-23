@@ -73,6 +73,7 @@ app.get('/init', (req, res) => {
                                 reply varchar(1000) NOT NULL,
                                 user_id int unsigned NOT NULL,
                                 post_id int unsigned NOT NULL,
+                                reply_id int unsigned NOT NULL,
                                 likes int unsigned NOT NULL,
                                 dislikes int unsigned NOT NULL,
                                 PRIMARY KEY (id)
@@ -241,8 +242,8 @@ app.post('/getChannelPosts', (req, res) => {
 
 
 app.post('/createReply', (req, res) => {
-    const { reply, user_id, post_id } = req.body;
-    const insertQuery = `INSERT INTO replies (reply, user_id, post_id, likes, dislikes) VALUES ('${reply}', '${user_id}', '${post_id}', '0', '0')`;
+    const { reply, user_id, post_id, reply_id } = req.body;
+    const insertQuery = `INSERT INTO replies (reply, user_id, post_id, reply_id, likes, dislikes) VALUES ('${reply}', '${user_id}', '${post_id}', '${reply_id}', '0', '0')`;
     connection.query(insertQuery, function (error, result) {
         if (error) {
             console.error("Error inserting post into table:", error);
@@ -273,6 +274,18 @@ app.post('/getPostReplies', (req, res) => {
     connection.query(query, [post_id], (error, results) => {
         if (error) {
             res.status(500).json({ error: `Error fetching posts for post_id:${post_id}` });
+        } else {
+            res.status(200).json(results);
+        }
+    });
+});
+
+app.post('/getReplyReplies', (req, res) => {
+    const { reply_id } = req.body;
+    const query = 'SELECT * FROM replies WHERE reply_id = ?';
+    connection.query(query, [reply_id], (error, results) => {
+        if (error) {
+            res.status(500).json({ error: `Error fetching posts for reply_id:${reply_id}` });
         } else {
             res.status(200).json(results);
         }

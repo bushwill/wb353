@@ -47,6 +47,8 @@
         <input type="text" id="reply_user_id"><br>
         <label for="reply_post_id">Post_ID:</label>
         <input type="text" id="reply_post_id"><br>
+        <label for="reply_post_id">Reply_ID:</label>
+        <input type="text" id="reply_reply_id"><br>
         <button type="button" onclick="createReply()">Create Reply</button>
         <button type="button" onclick="retrieveReplies()">Retrieve Replies</button>
     </form>
@@ -196,13 +198,15 @@
             const reply = document.getElementById('reply').value;
             const user_id = document.getElementById('reply_user_id').value;
             const post_id = document.getElementById('reply_post_id').value;
+            const reply_id = document.getElementById('reply_reply_id').value;
+
 
             fetch('/createReply', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ reply, user_id, post_id }),
+                body: JSON.stringify({ reply, user_id, post_id, reply_id }),
             })
                 .then(function (response) {
                     return response.text();
@@ -216,6 +220,7 @@
             document.getElementById("reply").value = '';
             document.getElementById("reply_user_id").value = '';
             document.getElementById("reply_post_id").value = '';
+            document.getElementById("reply_reply_id").value = '';
             retrieveReplies();
         }
 
@@ -233,7 +238,7 @@
 
                     data.forEach((entry) => {
                         const reply = document.createElement('p');
-                        reply.textContent = ` id: ${entry.id}, reply: ${entry.reply}, user_id: ${entry.user_id}, post_id: ${entry.post_id}, likes: ${entry.likes}, dislikes: ${entry.dislikes}`;
+                        reply.textContent = ` id: ${entry.id}, reply: ${entry.reply}, user_id: ${entry.user_id}, post_id: ${entry.post_id}, reply_id: ${entry.reply_id}, likes: ${entry.likes}, dislikes: ${entry.dislikes}`;
                         replyList.appendChild(reply);
                     });
                 })

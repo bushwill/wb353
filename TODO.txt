@@ -1,4 +1,5 @@
 1. Pictures on posts. (posts.jsx, createpostpage.jsx, postpage.jsx)
+2. View replies to replies (replies.jsx) needs to be recursion this time around
 
 /Users/williambushell/Documents/Uni Work/CS Projects/Docker/353 Project/server.js
   2,5:     TODO -> Prevent duplicate channels

@@ -8,6 +8,7 @@ const LoginPage = ({ onCancel }) => {
     const adminLogin = () => {
         redirectToApp(1, 'bushwill');
     };
+
     const redirectToApp = (user_id, username) => {
         root.render(
             <React.StrictMode>
@@ -43,7 +44,7 @@ const LoginPage = ({ onCancel }) => {
                 } else {
                     return response.json().then(data => {
                         if (data.username === getUsername && data.password === getPassword) {
-                            redirectToApp(data.user_id, data.username);
+                            redirectToApp(data.id, data.username);
                         } else {
                             setPopupTitle('Error! No account found.');
                             setPopupMessage(`Wrong username and/or password.`);

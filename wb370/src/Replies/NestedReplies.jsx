@@ -1,22 +1,20 @@
 import React, { useState, useEffect } from 'react';
 
-import NestedReplies from './NestedReplies';
 
-
-const Replies = ({ onReply, post_id }) => {
+const NestedReplies = ({ onReply, reply_id }) => {
     const [getReplies, setReplies] = useState([]);
 
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('http://localhost:5050/getPostReplies', {
+                const response = await fetch('http://localhost:5050/getReplyReplies', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        post_id: post_id,
+                        reply_id: reply_id,
                     }),
                 });
 
@@ -32,7 +30,7 @@ const Replies = ({ onReply, post_id }) => {
         };
 
         fetchData();
-    }, [post_id]);
+    }, [reply_id]);
 
 
 
@@ -55,4 +53,4 @@ const Replies = ({ onReply, post_id }) => {
     );
 };
 
-export default Replies;
+export default NestedReplies;

@@ -10,6 +10,7 @@ const PostPage = ({ user_id, post_id }) => {
     const [getReply_ID, setReply_ID] = useState(0);
     const [getPostQuestion, setPostQuestion] = useState("");
     const [getPostDescription, setPostDescription] = useState("");
+    const [getPostCreator, setPostCreator] = useState("");
 
     const [isCreateReplyPageVisible, setCreateReplyPageVisibility] = useState(false);
     const toggleCreateReplyPageVisibility = (post_id, reply_id) => {
@@ -48,10 +49,31 @@ const PostPage = ({ user_id, post_id }) => {
             } catch (error) {
                 console.error(error);
             }
+
+            try {
+                const response = await fetch('http://localhost:5050/getUserByID', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        user_id: user_id,
+                    }),
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                setPostCreator(data.username);
+            } catch (error) {
+                console.error(error);
+            }
         };
 
         fetchData();
-    }, [post_id]);
+    }, [post_id, user_id]);
 
     return (
         <div className="bg-white min-h-screen flex flex-col items-center">
@@ -62,12 +84,15 @@ const PostPage = ({ user_id, post_id }) => {
                 <h2 className='text-3xl mb-6'>
                     {getPostDescription}
                 </h2>
+                <h2 className='text-3xl mb-6'>
+                    Posted by {getPostCreator}
+                </h2>
             </header>
             <section className="py-16 text-center min-w-full">
                 <div className="container mx-auto justify-self-end">
                     <section>
                         {isRepliesVisible && < Replies onReply={toggleCreateReplyPageVisibility} post_id={post_id} />}
-                        {!isRepliesVisible && < Replies post_id={post_id} />}
+                        {!isRepliesVisible && < Replies onReply={toggleCreateReplyPageVisibility} post_id={post_id} />}
                     </section>
                 </div>
             </section>

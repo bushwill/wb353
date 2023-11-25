@@ -16,7 +16,7 @@ const LandingPage = () => {
     setCreateUserPageVisibility(!isCreateUserPageVisible);
   };
 
-  const [isContactSectionVisible, setContactSectionVisibility] = useState(true);
+  const [isContactSectionVisible, setContactSectionVisibility] = useState(false);
   const toggleContactSection = () => {
     setContactSectionVisibility(!isContactSectionVisible);
   };

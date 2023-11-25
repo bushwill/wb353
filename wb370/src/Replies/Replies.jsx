@@ -52,7 +52,9 @@ const Replies = ({ onReply, post_id }) => {
                             </button>
                         </div>
                     </div>
-                    < NestedReplies onReply={onReply} reply_id={reply.id} />
+                    <div className='ml-4'>
+                        < NestedReplies onReply={onReply} reply_id={reply.id} />
+                    </div>
                 </div>
             ))}
         </div>

@@ -166,11 +166,16 @@ app.post('/getUser', (req, res) => {
 });
 
 
-app.post('/checkUser', (req, res) => {
-    const { username } = req.body;
+app.post('/getUserByID', (req, res) => {
+    const { user_id } = req.body;
+    const query = 'SELECT * FROM users WHERE id = ?';
 
-    checkIfUserExists(username, (userExists) => {
-        res.status(200).json({ userExists });
+    connection.query(query, [user_id], (error, results) => {
+        if (error) {
+            res.status(500).json({ error: 'Error fetching user' });
+        } else {
+            res.status(200).json(results[0]);
+        }
     });
 });
 
@@ -183,6 +188,15 @@ app.get('/getUsers', (req, res) => {
         } else {
             res.status(200).json(results);
         }
+    });
+});
+
+
+app.post('/checkUser', (req, res) => {
+    const { username } = req.body;
+
+    checkIfUserExists(username, (userExists) => {
+        res.status(200).json({ userExists });
     });
 });
 
@@ -227,6 +241,31 @@ app.post('/getPost', (req, res) => {
     });
 });
 
+app.put('/likePost', (req, res) => {
+    const { post_id } = req.body;
+    const query = 'UPDATE posts SET likes = likes + 1 WHERE id = ?';
+
+    connection.query(query, [post_id], (error, results) => {
+        if (error) {
+            res.status(500).json({ error: 'Error fetching post' });
+        } else {
+            res.status(200).json(results[0]);
+        }
+    });
+});
+
+app.put('/dislikePost', (req, res) => {
+    const { post_id } = req.body;
+    const query = 'UPDATE posts SET dislikes = dislikes + 1 WHERE id = ?';
+
+    connection.query(query, [post_id], (error, results) => {
+        if (error) {
+            res.status(500).json({ error: 'Error fetching post' });
+        } else {
+            res.status(200).json(results[0]);
+        }
+    });
+});
 
 app.post('/getChannelPosts', (req, res) => {
     const { channel_id } = req.body;

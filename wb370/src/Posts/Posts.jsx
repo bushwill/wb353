@@ -26,7 +26,7 @@ const Posts = ({ user_id, channel_id }) => {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        channel_id: channel_id, 
+                        channel_id: channel_id,
                     }),
                 });
 
@@ -50,18 +50,22 @@ const Posts = ({ user_id, channel_id }) => {
         <div>
             {getPosts.map(post => (
                 <div key={post.id}>
-                    <div className='border-2 border-black'>
-                        <header className='border-2 border-black'>
-                            <h1 className='text-3xl font-bold mb-8'>
-                                {post.question}
-                            </h1>
-                        </header>
-                        <h1 className='text-3xl mb-8'>
-                            {post.description}
-                        </h1>
-                        <button onClick={() => viewPost(user_id, post.id)} className="bg-blue-500 hover:bg-blue-400 text-white px-3 py-1 m-3 rounded-full shadow-lg">
-                            View Post
-                        </button>
+                    <div className='border-2 border-black min-w-popup'>
+                        <div className='text-left'>
+                            <header>
+                                <h2 className='text-3xl font-bold'>
+                                    {post.question}
+                                </h2>
+                            </header>
+                            <text className='text-3xl mb-8'>
+                                {post.description}
+                            </text>
+                        </div>
+                        <div className='items-right'>
+                            <button onClick={() => viewPost(user_id, post.id)} className="bg-blue-500 hover:bg-blue-400 text-white px-3 py-1 m-3 rounded-full shadow-lg">
+                                View Post
+                            </button>
+                        </div>
                     </div>
                 </div>
             ))}

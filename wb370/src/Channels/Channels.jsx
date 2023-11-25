@@ -44,8 +44,8 @@ const Channels = ({ user_id }) => {
     return (
         <div>
             {getChannels.map(channel => (
-                <div key={channel.id}>
-                    <span className='text-3xl font-bold mb-8'>
+                <div key={channel.id} className='border-2 border-black'>
+                    <span className='text-3xl font-bold mx-16'>
                         {channel.name}
                     </span>
                     <button onClick={() => viewChannel(user_id, channel.id, channel.name)} className="bg-blue-500 hover:bg-blue-400 text-white px-3 py-1 m-3 rounded-full shadow-lg">

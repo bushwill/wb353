@@ -38,15 +38,21 @@ const NestedReplies = ({ onReply, reply_id }) => {
         <div>
             {getReplies.map(reply => (
                 <div key={reply.id}>
-                    <div>
-                        <h1 className='text-3xl font-bold mb-8'>
-                            {reply.reply}
-                        </h1>
-                        <button onClick={() => onReply(0, reply.id)} className="bg-blue-500 hover:bg-blue-700 text-white px-6 py-3 m-5 rounded-full shadow-lg">
-                            Reply
-                        </button>
+                    <div className='border-2 border-black min-w-popup'>
+                        <div className='text-left'>
+                            <h1 className='text-3xl font-bold'>
+                                {reply.reply}
+                            </h1>
+                        </div>
+                        <div>
+                            <button onClick={() => onReply(0, reply.id)} className="bg-blue-500 hover:bg-blue-700 text-white px-6 py-3 m-5 rounded-full shadow-lg">
+                                Reply
+                            </button>
+                        </div>
                     </div>
-                    < NestedReplies onReply={onReply} reply_id={reply.id} />
+                    <div className='ml-4'>
+                        < NestedReplies onReply={onReply} reply_id={reply.id} />
+                    </div>
                 </div>
             ))}
         </div>

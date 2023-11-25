@@ -21,34 +21,35 @@ const ChannelList = ({ user_id, username }) => {
   }
 
   return (
-    <div className="bg-white min-h-screen flex flex-col justify-center items-center">
-      <section className="py-16 text-center">
-        <header>
-          <h2 className="text-5xl font-bold mb-8">
-            Welcome, {username}!
-          </h2>
-          <h2 className="text-5xl font-bold mb-8">
-            Channels:
-          </h2>
-        </header>
+    <div className="bg-white flex flex-col min-w-screen items-center">
+      <header className="bg-white min-w-full top-0 left-0 fixed items-center text-center">
+        <span className="text-5xl font-bold mx-6">
+          Channels:
+        </span>
+      </header>
+      <section className="py-16 text-center min-w-full">
+        <h2 className='text-5xl font-bold mx-6'>
+          Welcome, {username}!
+        </h2>
         <div className="container mx-auto">
           <section>
-            {isChannelsVisible && < Channels user_id={user_id} />}
-            {!isChannelsVisible && < Channels user_id={user_id} />}
+            {isChannelsVisible && <Channels user_id={user_id} />}
+            {!isChannelsVisible && <Channels user_id={user_id} />}
           </section>
-          <footer className='fixed bottom-0 min-w-full'>
-            <button onClick={toggleCreateChannelPageVisibility} className="bg-blue-500 hover:bg-blue-700 text-white px-6 py-3 m-5 rounded-full shadow-lg">
-              Create Channel
-            </button>
-            <button onClick={refreshChannels} className="bg-blue-500 hover:bg-blue-700 text-white px-6 py-3 m-5 rounded-full shadow-lg">
-              Refresh Channels
-            </button>
-          </footer>
         </div>
       </section>
-      {isCreateChannelPageVisible && < CreateChannelPage onCancel={toggleCreateChannelPageVisibility} user_id={user_id} />}
+      <footer className='fixed bottom-0 min-w-full'>
+        <button onClick={toggleCreateChannelPageVisibility} className="bg-blue-500 hover:bg-blue-700 text-white px-6 py-3 m-5 rounded-full shadow-lg">
+          Create Channel
+        </button>
+        <button onClick={refreshChannels} className="bg-blue-500 hover:bg-blue-700 text-white px-6 py-3 m-5 rounded-full shadow-lg">
+          Refresh Channels
+        </button>
+      </footer>
+      {isCreateChannelPageVisible && <CreateChannelPage onCancel={toggleCreateChannelPageVisibility} user_id={user_id} />}
     </div>
   );
+
 };
 
 export default ChannelList;

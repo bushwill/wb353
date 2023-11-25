@@ -54,35 +54,32 @@ const PostPage = ({ user_id, post_id }) => {
     }, [post_id]);
 
     return (
-        <div className="bg-white min-h-screen flex flex-col justify-center items-center">
-            <section className="py-16 text-center">
-                <header>
-                    <h2 className="text-5xl font-bold mb-8">
-                        {getPostQuestion}
-                    </h2>
-                    <h2 className='text-3xl mb-6'>
-                        {getPostDescription}
-                    </h2>
-                </header>
-                <div className="container mx-auto">
-                    <h2 className="text-5xl font-bold mb-8">
-                        Replies:
-                    </h2>
+        <div className="bg-white min-h-screen flex flex-col items-center">
+            <header className="bg-white min-w-full top-0 left-0 items-center text-center">
+                <h2 className="text-5xl font-bold mb-8">
+                    {getPostQuestion}
+                </h2>
+                <h2 className='text-3xl mb-6'>
+                    {getPostDescription}
+                </h2>
+            </header>
+            <section className="py-16 text-center min-w-full">
+                <div className="container mx-auto justify-self-end">
                     <section>
                         {isRepliesVisible && < Replies onReply={toggleCreateReplyPageVisibility} post_id={post_id} />}
                         {!isRepliesVisible && < Replies post_id={post_id} />}
                     </section>
-                    <footer className='fixed bottom-0 min-w-full'>
-                        <button onClick={() => toggleCreateReplyPageVisibility(post_id, 0)} className="bg-blue-500 hover:bg-blue-700 text-white px-6 py-3 m-5 rounded-full shadow-lg">
-                            Create Reply to Post
-                        </button>
-                        <button onClick={refreshReplies} className="bg-blue-500 hover:bg-blue-700 text-white px-6 py-3 m-5 rounded-full shadow-lg">
-                            Refresh Replies
-                        </button>
-                    </footer>
                 </div>
             </section>
-            {isCreateReplyPageVisible && < CreateReplyPage onCancel={toggleCreateReplyPageVisibility} user_id={user_id} post_id={getPost_ID} reply_id={getReply_ID}/>}
+            <footer className='fixed bottom-0 min-w-full'>
+                <button onClick={() => toggleCreateReplyPageVisibility(post_id, 0)} className="bg-blue-500 hover:bg-blue-700 text-white px-6 py-3 m-5 rounded-full shadow-lg">
+                    Create Reply to Post
+                </button>
+                <button onClick={refreshReplies} className="bg-blue-500 hover:bg-blue-700 text-white px-6 py-3 m-5 rounded-full shadow-lg">
+                    Refresh Replies
+                </button>
+            </footer>
+            {isCreateReplyPageVisible && < CreateReplyPage onCancel={toggleCreateReplyPageVisibility} user_id={user_id} post_id={getPost_ID} reply_id={getReply_ID} />}
         </div>
     );
 };

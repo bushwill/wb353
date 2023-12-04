@@ -27,12 +27,14 @@ const LandingPage = () => {
       <section className="py-16 text-center">
         <div className="container mx-auto">
           <h2 className="text-5xl font-bold mb-8">Welcome to my System!</h2>
-          <p className="text-gray-700 text-lg mb-4 text-left">
-            This is a project I completed individually for CMPT 353, an introductory course to full-stack web programming
-          </p>
-          <p className="text-gray-700 text-lg mb-4 text-right">
-            Cheers! - Will
-          </p>
+          <div className="text-gray-700 text-lg m-5 text-left">
+            <p>
+              This is a project I completed individually for CMPT 353, an introductory course to full-stack web programming
+            </p>
+            <p>
+              Cheers! - Will
+            </p>
+          </div>
           <button onClick={toggleLogInPage} className="bg-green-500 hover:bg-green-700 text-white px-6 py-3 m-5 rounded-full shadow-lg">
             Log In
           </button>
@@ -43,13 +45,13 @@ const LandingPage = () => {
       </section>
 
       {/* Contact Section */}
-      {isContactSectionVisible && < ContactSection onCancel={toggleContactSection}/>}
+      {isContactSectionVisible && < ContactSection onCancel={toggleContactSection} />}
 
       {/* LogInPage Modal */}
-      {isLogInPageVisible && < LogInPage onCancel={toggleLogInPage}/>}
+      {isLogInPageVisible && < LogInPage onCancel={toggleLogInPage} />}
 
       {/* CreateAccountPage Modal */}
-      {isCreateUserPageVisible && < CreateUserPage onCancel={toggleCreateUserPage}/>}
+      {isCreateUserPageVisible && < CreateUserPage onCancel={toggleCreateUserPage} />}
 
     </div>
   );

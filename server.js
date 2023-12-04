@@ -241,6 +241,20 @@ app.post('/getPost', (req, res) => {
     });
 });
 
+app.post('/searchPost', (req, res) => {
+    const { text, channel_id } = req.body;
+    const query = `SELECT * FROM posts WHERE channel_id = '${channel_id}' AND (question LIKE '%${text}%' OR description LIKE '%${text}%')`;
+
+    connection.query(query, (error, results) => {
+        if (error) {
+            res.status(500).json({ error: 'Error fetching posts' });
+        } else {
+            res.status(200).json(results);
+        }
+    });
+});
+
+
 app.put('/likePost', (req, res) => {
     const { post_id } = req.body;
     const query = 'UPDATE posts SET likes = likes + 1 WHERE id = ?';
@@ -306,6 +320,31 @@ app.get('/getReplies', (req, res) => {
     });
 });
 
+app.put('/likeReply', (req, res) => {
+    const { reply_id } = req.body;
+    const query = 'UPDATE replies SET likes = likes + 1 WHERE id = ?';
+
+    connection.query(query, [reply_id], (error, results) => {
+        if (error) {
+            res.status(500).json({ error: 'Error fetching post' });
+        } else {
+            res.status(200).json(results[0]);
+        }
+    });
+});
+
+app.put('/dislikeReply', (req, res) => {
+    const { reply_id } = req.body;
+    const query = 'UPDATE replies SET dislikes = dislikes + 1 WHERE id = ?';
+
+    connection.query(query, [reply_id], (error, results) => {
+        if (error) {
+            res.status(500).json({ error: 'Error fetching post' });
+        } else {
+            res.status(200).json(results[0]);
+        }
+    });
+});
 
 app.post('/getPostReplies', (req, res) => {
     const { post_id } = req.body;
@@ -349,6 +388,19 @@ app.post('/createChannel', (req, res) => {
 
 app.get('/getChannels', (req, res) => {
     const query = 'SELECT * FROM channels';
+    connection.query(query, (error, results) => {
+        if (error) {
+            res.status(500).json({ error: 'Error fetching channels' });
+        } else {
+            res.status(200).json(results);
+        }
+    });
+});
+
+app.post('/searchChannel', (req, res) => {
+    const { text } = req.body;
+    const query = `SELECT * FROM channels WHERE name LIKE '%${text}%'`;
+
     connection.query(query, (error, results) => {
         if (error) {
             res.status(500).json({ error: 'Error fetching channels' });

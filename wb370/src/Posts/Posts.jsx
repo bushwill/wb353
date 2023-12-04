@@ -6,6 +6,9 @@ import PostPage from './PostPage'
 
 const Posts = ({ user_id, channel_id }) => {
     const [getPosts, setPosts] = useState([]);
+    const sortedPosts = [...getPosts].sort((a, b) => (b.likes - b.dislikes) - (a.likes - a.dislikes));
+    const [getSearchText, setSearchText] = useState('');
+
 
 
     const viewPost = (user_id, post_id) => {
@@ -66,6 +69,35 @@ const Posts = ({ user_id, channel_id }) => {
     };
 
 
+    const handleSearch = () => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch('http://localhost:5050/searchPost', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        text: getSearchText,
+                        channel_id: channel_id,
+                    }),
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                setPosts(data);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        fetchData();
+    };
+
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -97,7 +129,14 @@ const Posts = ({ user_id, channel_id }) => {
 
     return (
         <div>
-            {getPosts.map(post => (
+            <input
+                type="text"
+                value={getSearchText}
+                onChange={(e) => setSearchText(e.target.value)} 
+                placeholder="Search for posts..."
+            />
+            <button onClick={handleSearch}>Search</button>
+            {sortedPosts.map(post => (
                 <div key={post.id}>
                     <div className='border-2 border-black min-w-popup'>
                         <div className='text-left'>

@@ -6,6 +6,7 @@ import ChannelPage from './ChannelPage';
 
 const Channels = ({ user_id }) => {
     const [getChannels, setChannels] = useState([]);
+    const [getSearchText, setSearchText] = useState('');
 
 
     const viewChannel = (user_id, channel_id, channel_name) => {
@@ -14,6 +15,34 @@ const Channels = ({ user_id }) => {
                 <ChannelPage user_id={user_id} channel_id={channel_id} channel_name={channel_name} />
             </React.StrictMode>
         );
+    };
+
+
+    const handleSearch = () => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch('http://localhost:5050/searchChannel', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        text: getSearchText,
+                    }),
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                setChannels(data);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        fetchData();
     };
 
 
@@ -43,6 +72,13 @@ const Channels = ({ user_id }) => {
 
     return (
         <div>
+            <input
+                type="text"
+                value={getSearchText}
+                onChange={(e) => setSearchText(e.target.value)}
+                placeholder="Search for channels..."
+            />
+            <button onClick={handleSearch}>Search</button>
             {getChannels.map(channel => (
                 <div key={channel.id} className='border-2 border-black'>
                     <span className='text-3xl font-bold mx-16'>

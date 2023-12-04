@@ -12,7 +12,7 @@ const LoginPage = ({ onCancel }) => {
     const redirectToApp = (user_id, username) => {
         root.render(
             <React.StrictMode>
-                <ChannelList user_id={user_id} username={username} />
+                <ChannelList user_id={user_id} />
             </React.StrictMode>
         );
     };

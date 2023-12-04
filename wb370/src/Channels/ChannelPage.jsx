@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 
 import Posts from '../Posts/Posts'
 import CreatePostPage from '../Posts/CreatePostPage';
+import root from '../index'
+import ChannelList from './ChannelList';
 
 
 const ChannelPage = ({ user_id, channel_id, channel_name }) => {
@@ -17,9 +19,20 @@ const ChannelPage = ({ user_id, channel_id, channel_name }) => {
     setPostsVisibility(!isPostsVisible);
   }
 
+  const redirectToApp = () => {
+    root.render(
+      <React.StrictMode>
+        <ChannelList user_id={user_id} />
+      </React.StrictMode>
+    );
+  };
+
   return (
     <div className="bg-white min-h-screen flex flex-col items-center">
       <header className="bg-white min-w-full top-0 left-0 fixed items-center text-center">
+        <button onClick={redirectToApp} className="bg-red-500 hover:bg-red-400 text-white px-3 py-1 m-3 rounded-full shadow-lg">
+          Back to All Channels
+        </button>
         <span className="text-5xl font-bold mb-8">
           {channel_name}:
         </span>
